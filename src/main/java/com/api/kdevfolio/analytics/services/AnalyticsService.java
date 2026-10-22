@@ -1,6 +1,8 @@
 
 package com.api.kdevfolio.analytics.services;
 
+import org.springframework.beans.factory.annotation.Value;
+
 import com.api.kdevfolio.analytics.dtos.RecordVisitDto;
 import com.api.kdevfolio.analytics.dtos.VisitResponseDto;
 import com.api.kdevfolio.analytics.models.Visit;
@@ -10,8 +12,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -19,11 +24,31 @@ public class AnalyticsService {
 
     private final VisitsRepository visitsRepository;
 
+    @Value("${analytics.excluded-visitors:}")
+    private String excludedVisitorsConfig;
+
+    private Set<UUID> getExcludedVisitors() {
+        if (excludedVisitorsConfig == null
+                || excludedVisitorsConfig.isBlank()) {
+            return Set.of();
+        }
+
+        return Arrays.stream(excludedVisitorsConfig.split(","))
+                .map(String::trim)
+                .filter(value -> !value.isEmpty())
+                .map(UUID::fromString)
+                .collect(Collectors.toSet());
+    }
+
     @Transactional
     public VisitResponseDto recordVisit(
             RecordVisitDto dto,
             HttpServletRequest request
     ) {
+        if (dto.visitorId() != null && getExcludedVisitors().contains(dto.visitorId())) {
+            return null;
+        }
+
         Visit visit = new Visit();
 
         visit.setVisitorId(dto.visitorId());
