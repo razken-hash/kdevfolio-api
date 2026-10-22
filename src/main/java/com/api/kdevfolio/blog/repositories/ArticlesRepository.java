@@ -1,23 +1,18 @@
+
 package com.api.kdevfolio.blog.repositories;
 
 import com.api.kdevfolio.blog.models.Article;
-import org.springframework.data.repository.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface BlogRepository extends Repository<Article, UUID> {
-
-    Optional<Article> findById(UUID id);
+public interface ArticlesRepository extends JpaRepository<Article, UUID> {
 
     Optional<Article> findBySlug(String slug);
 
-    List<Article> findAll();
+    boolean existsBySlug(String slug);
 
     List<Article> findAllByCategories_Slug(String categorySlug);
-
-    Article save(Article article);
-
-    void delete(Article article);
 }

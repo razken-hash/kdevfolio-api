@@ -16,7 +16,7 @@ import java.util.UUID;
 @Table(name = "articles")
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class Article {
 
     @Id
@@ -25,9 +25,6 @@ public class Article {
 
     @Column(nullable = false, unique = true, length = 180)
     private String slug;
-
-    @Column(length = 2048)
-    private String imageUrl;
 
     @Column(nullable = false)
     private Integer readingTimeMinutes;

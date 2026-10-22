@@ -21,7 +21,7 @@ import java.util.UUID;
 )
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class ArticleContent {
 
     @Id
@@ -44,4 +44,7 @@ public class ArticleContent {
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
+
+    @Column(length = 2048)
+    private String imageUrl;
 }
