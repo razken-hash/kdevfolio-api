@@ -1,7 +1,7 @@
-
 package com.api.kdevfolio.blog.controllers;
 
 import com.api.kdevfolio.blog.models.Article;
+import com.api.kdevfolio.blog.models.ArticleLanguage;
 import com.api.kdevfolio.blog.services.BlogService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +21,7 @@ public class BlogController {
 
     @GetMapping
     public List<Article> getAllArticles() {
-        return blogService.getAllArticle();
+        return blogService.getAllArticles();
     }
 
     @GetMapping("/{id}")

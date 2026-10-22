@@ -26,17 +26,11 @@ public class Article {
     @Column(nullable = false, unique = true, length = 180)
     private String slug;
 
-    @Column(nullable = false, length = 200)
-    private String title;
-
-    @Column(nullable = false, length = 500)
-    private String description;
-
-    @Column(nullable = false, columnDefinition = "TEXT")
-    private String content;
-
     @Column(length = 2048)
     private String imageUrl;
+
+    @Column(nullable = false)
+    private Integer readingTimeMinutes;
 
     @Column(nullable = false, length = 150)
     private String authorName;
@@ -48,6 +42,13 @@ public class Article {
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
     private Set<Category> categories = new HashSet<>();
+
+    @OneToMany(
+            mappedBy = "article",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private Set<ArticleContent> translations = new HashSet<>();
 
     @Column(nullable = false, updatable = false)
     private Instant createdAt;
@@ -65,5 +66,15 @@ public class Article {
     @PreUpdate
     protected void onUpdate() {
         this.updatedAt = Instant.now();
+    }
+
+    public void addTranslation(ArticleContent translation) {
+        translations.add(translation);
+        translation.setArticle(this);
+    }
+
+    public void removeTranslation(ArticleContent translation) {
+        translations.remove(translation);
+        translation.setArticle(null);
     }
 }
