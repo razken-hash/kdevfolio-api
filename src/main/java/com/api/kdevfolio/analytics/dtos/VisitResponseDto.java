@@ -12,32 +12,22 @@ public record VisitResponseDto(
 
         UUID visitorId,
 
-        String country,
-
         String origin,
 
         String path,
 
         String pageTitle,
 
-        String browserLanguage,
-
         String deviceType,
-
-        String browser,
 
         String operatingSystem,
 
-        Integer viewportWidth,
+        String platform,
 
-        Integer viewportHeight,
+        String browser,
 
-        Integer screenWidth,
+        String browserLanguage,
 
-        Integer screenHeight,
-
-        String timeZone,
-
-        String platform
+        String timeZone
 
 ) {}

@@ -30,24 +30,17 @@ public class AnalyticsService {
         visit.setPath(dto.path());
         visit.setOrigin(dto.origin());
         visit.setPageTitle(dto.pageTitle());
-        visit.setBrowserLanguage(dto.browserLanguage());
         visit.setDeviceType(dto.deviceType());
-        visit.setBrowser(dto.browser());
         visit.setOperatingSystem(dto.operatingSystem());
-        visit.setViewportWidth(dto.viewportWidth());
-        visit.setViewportHeight(dto.viewportHeight());
-        visit.setScreenWidth(dto.screenWidth());
-        visit.setScreenHeight(dto.screenHeight());
-        visit.setTimeZone(dto.timeZone());
         visit.setPlatform(dto.platform());
+        visit.setBrowser(dto.browser());
+        visit.setBrowserLanguage(dto.browserLanguage());
+        visit.setTimeZone(dto.timeZone());
 
         // Obtain the address from the server-side request.
         // Configure trusted proxy handling before relying on this
         // value in a reverse-proxy deployment.
         visit.setIpAddress(request.getRemoteAddr());
-
-        // Country can be populated here using an IP geolocation
-        // provider if required.
 
         Visit savedVisit = visitsRepository.save(visit);
 
@@ -79,7 +72,6 @@ public class AnalyticsService {
                 visit.getId(),
                 visit.getVisitedAt(),
                 visit.getVisitorId(),
-                visit.getCountry(),
                 visit.getOrigin(),
                 visit.getPath(),
                 visit.getPageTitle(),
@@ -87,10 +79,6 @@ public class AnalyticsService {
                 visit.getDeviceType(),
                 visit.getBrowser(),
                 visit.getOperatingSystem(),
-                visit.getViewportWidth(),
-                visit.getViewportHeight(),
-                visit.getScreenWidth(),
-                visit.getScreenHeight(),
                 visit.getTimeZone(),
                 visit.getPlatform()
         );

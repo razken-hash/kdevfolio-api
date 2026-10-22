@@ -1,8 +1,6 @@
 
 package com.api.kdevfolio.analytics.dtos;
 
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
@@ -22,38 +20,22 @@ public record RecordVisitDto(
         @Size(max = 300)
         String pageTitle,
 
-        @Size(max = 10)
-        String browserLanguage,
-
         @Size(max = 20)
         String deviceType,
 
         @Size(max = 50)
-        String browser,
-
-        @Size(max = 50)
         String operatingSystem,
 
-        @Min(0)
-        @Max(10000)
-        Integer viewportWidth,
+        @Size(max = 100)
+        String platform,
 
-        @Min(0)
-        @Max(10000)
-        Integer viewportHeight,
+        @Size(max = 50)
+        String browser,
 
-        @Min(0)
-        @Max(10000)
-        Integer screenWidth,
-
-        @Min(0)
-        @Max(10000)
-        Integer screenHeight,
+        @Size(max = 10)
+        String browserLanguage,
 
         @Size(max = 100)
-        String timeZone,
-
-        @Size(max = 100)
-        String platform
+        String timeZone
 
 ) {}
