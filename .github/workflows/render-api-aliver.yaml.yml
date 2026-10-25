@@ -1,0 +1,42 @@
+
+name: Keep API Alive
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+
+  workflow_dispatch:
+    inputs:
+      API_URL:
+        description: "API health endpoint URL"
+        type: string
+        required: true
+        default: "https://kdevfolio-api.onrender.com/health"
+
+concurrency:
+  group: keep-api-alive
+  cancel-in-progress: false
+
+jobs:
+  ping-api:
+    name: Ping API on Render
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+
+    env:
+      API_URL: ${{ inputs.API_URL || 'https://kdevfolio-api.onrender.com/health' }}
+
+    steps:
+      - name: Check API health endpoint
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          echo "Checking API: ${API_URL}"
+
+          curl --fail --silent --show-error \
+            --connect-timeout 10 \
+            --max-time 30 \
+            "${API_URL}"
+
+          echo "API health check succeeded."
