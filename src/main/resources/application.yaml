@@ -22,3 +22,7 @@ spring:
 
 analytics:
   excluded-visitors: ${EXCLUDED_VISITORS:}
+
+gemini:
+  api-key: ${GOOGLE_API_KEY}
+  model: ${GEMINI_MODEL:gemini-flash-latest}

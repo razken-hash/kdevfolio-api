@@ -1,0 +1,341 @@
+
+\documentclass[10pt,a4paper]{article}
+
+% ------------------------------------------------------------------
+% Packages
+% ------------------------------------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage[default]{sourcesanspro}
+\usepackage[a4paper,left=1.2cm,right=1.2cm,top=3.55cm,bottom=0.8cm]{geometry}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{fadings}
+\usepackage[most]{tcolorbox}
+\usepackage{fontawesome5}
+\usepackage{enumitem}
+\usepackage{ragged2e}
+\usepackage{microtype}
+\usepackage[hidelinks,
+pdftitle={Abderrazak Kenniche - QA Engineer CV},
+pdfauthor={Abderrazak Kenniche}]{hyperref}
+
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\JustifyingParindent}{0pt}
+
+% ------------------------------------------------------------------
+% Colors
+% ------------------------------------------------------------------
+\definecolor{navy}{HTML}{14325C}
+\definecolor{accent}{HTML}{1F5FAD}
+\definecolor{steel}{HTML}{2E6DB4}
+\definecolor{hairline}{HTML}{D6DEE8}
+\definecolor{textdark}{HTML}{222831}
+\definecolor{textmuted}{HTML}{66707D}
+\color{textdark}
+
+% ------------------------------------------------------------------
+% Header: navy band with glass shapes and a frosted contact panel
+% ------------------------------------------------------------------
+\newlength{\cvheaderht}
+\setlength{\cvheaderht}{3.7cm}
+
+\newcommand{\contactitem}[2]{%
+\mbox{\textcolor{white!70!accent}{#1}\hspace{0.45em}#2}}
+
+\newcommand{\makeheader}{%
+\begin{tikzpicture}[remember picture,overlay]
+\coordinate (NW) at (current page.north west);
+\coordinate (NE) at (current page.north east);
+\coordinate (HB) at ([yshift=-\cvheaderht]current page.north east);
+
+    % Band
+    \fill[navy] (NW) rectangle (HB);
+
+    % Glass shapes, clipped to the band
+    \begin{scope}
+      \clip (NW) rectangle (HB);
+      \fill[white, opacity=0.07] ([xshift=-2.3cm,yshift=0.2cm]NE) circle (2.5cm);
+      \draw[white, opacity=0.22, line width=0.6pt] ([xshift=-2.3cm,yshift=0.2cm]NE) circle (2.5cm);
+      \fill[white, opacity=0.05] ([xshift=-5.2cm,yshift=-2.9cm]NE) circle (1.3cm);
+      \draw[white, opacity=0.16, line width=0.6pt] ([xshift=-5.2cm,yshift=-2.9cm]NE) circle (1.3cm);
+    \end{scope}
+
+    % Name and title
+    \node[anchor=north west, text=white, inner sep=0pt]
+      at ([xshift=1.2cm,yshift=-0.62cm]NW)
+      {\fontsize{26}{28}\selectfont\bfseries ABDERRAZAK KENNICHE};
+    \node[anchor=north west, text=white, inner sep=0pt]
+      at ([xshift=1.2cm,yshift=-1.58cm]NW)
+      {\fontsize{13.5}{15}\selectfont\fontseries{sb}\selectfont\textls[30]{QA Engineer \& Test Automation}};
+
+    % Frosted glass contact panel
+    \node[
+      anchor=north west,
+      text width=\dimexpr\paperwidth-2.4cm-18pt-1pt\relax,
+      rounded corners=5pt,
+      fill=white, fill opacity=0.10,
+      text opacity=1,
+      draw=white, draw opacity=0.30,
+      line width=0.5pt,
+      inner xsep=9pt, inner ysep=4.5pt,
+      text=white
+    ] at ([xshift=1.2cm,yshift=-2.25cm]NW)
+    {%
+      \small
+      \begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}lll@{}}
+        \contactitem{\faMapMarker*}{Île-de-France, France} &
+        \contactitem{\faPhone}{\href{tel:+33753188225}{+33 7 53 18 82 25}} &
+        \contactitem{\faEnvelope}{\href{mailto:pro.contactabderrzak@gmail.com}{pro.contactabderrzak@gmail.com}} \\[6pt]
+        \contactitem{\faGithub}{\href{https://github.com/razken-hash}{github.com/razken-hash}} &
+        \contactitem{\faLinkedin}{\href{https://www.linkedin.com/in/razken-hash}{linkedin.com/in/razken-hash}} &
+        \contactitem{\faGlobe}{\href{https://razken-hash.site/?origin=cv-dev}{razken-hash.site}}
+      \end{tabular*}%
+    };
+\end{tikzpicture}%
+}
+
+% ------------------------------------------------------------------
+% Background: faint waves and diagonal lines (page stays white)
+% ------------------------------------------------------------------
+% \bgwave{vertical offset}{opacity}
+\newcommand{\bgwave}[2]{%
+\draw[steel, line width=0.7pt, opacity=#2, path fading=west]
+([yshift=0.5cm+#1]SW) .. controls +(6cm,1.6cm) and +(-5cm,-1.4cm) .. ([xshift=-7cm,yshift=0.9cm+#1]SE)
+.. controls +(3cm,0.8cm) and +(-2cm,-0.3cm) .. ([yshift=1.9cm+#1]SE);}
+
+% \bgdiagonal{horizontal offset}
+\newcommand{\bgdiagonal}[1]{%
+\draw[steel, line width=0.6pt, opacity=0.35, path fading=north]
+([xshift=1.2cm+#1,yshift=0.7cm]current page.south west) --
+([xshift=3.0cm+#1,yshift=2.9cm]current page.south west);}
+
+\newcommand{\drawbackgroundlines}{%
+\begin{tikzpicture}[remember picture,overlay]
+\coordinate (SW) at (current page.south west);
+\coordinate (SE) at (current page.south east);
+\bgwave{0cm}{0.30}
+\bgwave{0.35cm}{0.22}
+\bgwave{0.7cm}{0.15}
+\shade[inner color=steel!22, outer color=white]
+([xshift=-0.2cm,yshift=0.3cm]SE) circle (2.2cm);
+\bgdiagonal{0cm}
+\bgdiagonal{0.3cm}
+\end{tikzpicture}%
+}
+
+% ------------------------------------------------------------------
+% Glass panel (profile)
+% ------------------------------------------------------------------
+\newtcolorbox{glasspanel}{enhanced, width=\linewidth,
+colback=white, opacityback=0.62, colframe=white, opacityframe=0.9,
+boxrule=0.8pt, arc=7pt, left=10pt, right=10pt, top=6pt, bottom=6pt,
+before skip=0pt, after skip=0pt,
+underlay={
+\begin{scope}
+\clip[rounded corners=7pt] (frame.south west) rectangle (frame.north east);
+\shade[left color=accent!14, right color=steel!6] (frame.south west) rectangle (frame.north east);
+\shade[inner color=steel!35, outer color=steel!6]
+([xshift=2.2cm,yshift=0.2cm]frame.south west) circle (1.5cm);
+\shade[inner color=accent!30, outer color=accent!5]
+([xshift=-3cm,yshift=-0.1cm]frame.north east) circle (1.9cm);
+\end{scope}
+\draw[rounded corners=7pt, steel!30, line width=0.5pt]
+([xshift=-0.6pt,yshift=-0.6pt]frame.south west) rectangle ([xshift=0.6pt,yshift=0.6pt]frame.north east);
+},
+overlay={
+\fill[white, opacity=0.45, rounded corners=6pt, path fading=south]
+([xshift=1pt,yshift=-1pt]frame.north west) rectangle ([xshift=-1pt,yshift=-0.9cm]frame.north east);
+}}
+
+% ------------------------------------------------------------------
+% Section boxes
+% ------------------------------------------------------------------
+\newcommand{\boxtitle}[1]{%
+{\color{navy}\bfseries\textls[120]{\MakeUppercase{#1}}}\par
+\vspace{0.25em}
+\nointerlineskip
+{\color{accent}\rule{1.6em}{1.6pt}}%
+{\color{hairline}\rule[0.35pt]{\dimexpr\linewidth-1.6em\relax}{0.6pt}}\par
+\vspace{0.5em}}
+
+% \begin{cvbox}[tcolorbox options]{title}
+\newtcolorbox{cvbox}[2][]{enhanced, colback=white, colframe=steel!22,
+boxrule=0.6pt, arc=6pt, left=7pt, right=7pt, top=5pt, bottom=4pt,
+before skip=0pt, after skip=7pt,
+fuzzy shadow={0mm}{-0.5mm}{0mm}{0.35mm}{steel!14},
+before upper={\boxtitle{#2}}, #1}
+
+% ------------------------------------------------------------------
+% Lists and highlighted figures
+% ------------------------------------------------------------------
+\setlist[itemize]{leftmargin=1.1em, itemsep=0.2em, topsep=0.15em, parsep=0pt,
+label={\raisebox{0.2ex}{\tikz\fill[accent] (0,0) circle (1.7pt);}}}
+
+% \metric{150+}: bold accent figure that opens a bullet
+\newcommand{\metric}[1]{{\bfseries\color{accent}#1}}
+
+% ------------------------------------------------------------------
+% Experience timeline
+% ------------------------------------------------------------------
+\newcounter{tlentry}
+\newlength{\tlindent}
+\setlength{\tlindent}{1.4em}
+
+% \cventry{dates}{role}{company}{location}{content}
+\newcommand{\cventry}[5]{%
+\stepcounter{tlentry}%
+\begin{tcolorbox}[blanker, left=\tlindent, before skip=0pt, after skip=0pt]
+\tikz[remember picture,overlay]\coordinate (tl-\thetlentry) at (-\tlindent+0.45em,0.4em);%
+{\fontsize{11.5}{13.5}\selectfont\bfseries\color{accent}#3}\hfill{\small\bfseries\color{accent}#1}\par
+\vspace{0.05em}
+{\bfseries #2}\hfill{\small\color{textmuted}#4}\par
+\vspace{0.1em}
+#5
+\end{tcolorbox}}
+
+\newcommand{\entrygap}{\par\vspace{1.4em}}
+
+% Vertical line through all entry dots (first dot filled = current/latest job)
+\newcommand{\drawtimeline}{%
+\begin{tikzpicture}[remember picture,overlay]
+\draw[steel!35, line width=1.1pt] (tl-1) -- (tl-\thetlentry);
+\foreach \n in {1,...,\thetlentry} {
+\fill[white] (tl-\n) circle (4.2pt);
+\draw[accent, line width=1.4pt, fill=white] (tl-\n) circle (3pt);
+}
+\fill[accent] (tl-1) circle (3pt);
+\end{tikzpicture}}
+
+% \stack{technologies}
+\newcommand{\stack}[1]{%
+\vspace{0.1em}{\small{\color{navy}\bfseries Stack:} {\color{textmuted}#1}}}
+
+% ------------------------------------------------------------------
+% Education, skills, languages
+% ------------------------------------------------------------------
+% \cvedu{degree}{school}{location}
+\newcommand{\cvedu}[3]{%
+\begin{itemize}
+\item {\bfseries\color{navy}#1}\hfill
+{\bfseries\color{accent}#2} {\small\color{textmuted}(#3)}
+\end{itemize}}
+
+% \skillgroup{label}{items}: label and items aligned in two columns
+% \newcommand{\skillgroup}[2]{%
+%   \begin{itemize}
+%     \item \parbox[t]{3.2cm}{\small\bfseries\color{navy}#1}%
+%           \parbox[t]{\dimexpr\linewidth-3.2cm\relax}{\small #2}
+%   \end{itemize}}
+
+\newcommand{\skillgroup}[2]{%
+\begin{itemize}
+\item \makebox[3cm][l]{\small\bfseries\color{navy}#1}%
+{\small #2}
+\end{itemize}%
+}
+
+% \langitem{language}{level}
+\newcommand{\langitem}[2]{%
+{\color{accent}\bfseries\textbullet}\hspace{0.3em}%
+{\small\bfseries\color{navy}#1}\hspace{0.2cm}{\small\color{textmuted}(#2)}}
+
+% Three languages spread across one line
+\newcommand{\langrow}[6]{%
+\noindent\langitem{#1}{#2}\hfill\langitem{#3}{#4}\hfill\langitem{#5}{#6}}
+
+% ==================================================================
+\begin{document}
+\makeheader
+\drawbackgroundlines
+
+% ---------------------------- Profile -----------------------------
+\vspace*{-0.2em}
+\begin{glasspanel}
+\justifying
+{\color{navy}\bfseries\textls[120]{PROFILE}}\par\vspace{0.3em}
+QA engineer with a software-engineering background (dual degrees from ESI and the
+University of Montpellier) and 3+ years of experience building test automation
+and quality tooling. Strong in UI, integration and unit testing with Playwright,
+Cypress, Selenium, Puppeteer, JUnit and Mockito, backed by CI/CD, API testing and
+AI-assisted test workflows.
+\end{glasspanel}
+\par\vspace{0.6em}
+
+% ------------------------- Experience -----------------------------
+\begin{cvbox}[halign=justify]{Professional Experience}
+
+\cventry{02/2026 -- 08/2026}{QA Automation \& Frontend Engineer}
+{\href{https://fr.shopping.rakuten.com/}{Rakuten France}}{Paris, France}{
+\begin{itemize}
+\item \metric{150+} Playwright integration tests built on mock servers and services to validate frontend behavior in isolation.
+\item \metric{1,000+} Storybook stories covered by automated visual regression across multiple locales (Reg-Suit, GitHub Actions).
+\item \metric{5} Next.js micro-frontend apps implemented and verified for dark mode on a shared MUI design system.
+\item \metric{10,000+} CI artifacts and test reports migrated to Google Cloud Storage, exposed through a secure TypeScript proxy.
+\item \metric{3} MCP integrations (Storybook, Playwright, GitHub) enabling AI-assisted testing workflows.
+\end{itemize}
+\stack{Playwright, Reg-Suit, Storybook, GitHub Actions, TypeScript, React, Next.js, MUI, Google Cloud Storage, Claude Code}
+}
+
+\entrygap
+
+\cventry{01/2025 -- 07/2025}{QA Automation Engineer (R\&D)}
+{LIRMM -- Laboratory of Computer Science and Robotics}{Montpellier, France}{
+\begin{itemize}
+\item \metric{1} static analyzer (Node.js, TypeScript) extracting routes from Angular apps to derive testable scenarios.
+\item \metric{1} Angular interface to visualize navigation graphs and select test scenarios.
+\item \metric{2} automation engines (Selenium, Puppeteer) generating end-to-end tests from the selected scenarios.
+\item \metric{1} LLM-powered observability layer assessing test executions and analyzing results.
+\end{itemize}
+\stack{Selenium, Puppeteer, Angular, Node.js, TypeScript, LLMs, RAG, Embeddings, Vector Search}
+}
+
+\entrygap
+
+\cventry{09/2024 -- 07/2025}{Software Quality Engineer (R\&D)}
+{LCSI -- Laboratory of Computer and Information Systems}{}{
+\begin{itemize}
+\item \metric{6} types of Java code smells detected by a full-stack quality platform (Angular, Spring Boot, Python).
+\item \metric{5,000+} Java methods and classes gathered into a dataset for model training and evaluation.
+\item \metric{1} CodeBERT model fine-tuned to classify code smells directly from Java source code.
+\item \metric{1} REST API analyzing complete Java projects and generating detailed PDF quality reports.
+\end{itemize}
+\stack{Java, Spring Boot, Angular, Python, Transformers, Machine Learning, CodeBERT}
+}
+
+\end{cvbox}
+\drawtimeline
+
+% ---------------------------- Education ---------------------------
+\begin{cvbox}{Education}
+\cvedu{Master in Software Engineering}
+{\href{https://www.umontpellier.fr/}{University of Montpellier}}{Montpellier, France}
+% \cvedu{Double Master Diploma in Management}
+%   {\href{https://iae.umontpellier.fr/}{IAE, School of Management}}{Montpellier, France}
+\cvedu{State Engineer in Software Engineering}
+{\href{https://www.esi.dz/}{High School of Computer Science (ESI)}}{Algiers, Algeria}
+\vspace{-0.5em}
+\end{cvbox}
+
+% ----------------------------- Skills -----------------------------
+\begin{cvbox}[halign=flush left]{Skills}
+\skillgroup{UI / E2E Testing}{Selenium, Puppeteer, Playwright, Cypress, Page Object Model, Cross-browser testing}
+\skillgroup{Unit \& Integration}{JUnit 5, Mockito, Spring Boot Test, TestNG, AssertJ, Testcontainers, Jest}
+\skillgroup{API Testing}{Postman, Newman, REST Assured, WireMock \& mock servers, REST, gRPC, GraphQL}
+\skillgroup{Visual / Performance}{Storybook, Reg-Suit (visual regression), JMeter, Lighthouse}
+% \skillgroup{Quality \& Reporting}{SonarQube, JaCoCo, Allure, Jira, test plans \& test cases}
+\skillgroup{CI/CD \& DevOps}{GitHub Actions, Docker, Kubernetes, AWS (IAM, EC2, VPC), Prometheus, Grafana, Kibana}
+% \skillgroup{Methodologies}{TDD, BDD (Cucumber), test pyramid, regression \& exploratory testing, Agile/Scrum}
+\skillgroup{Frameworks \& DBs}{Java, Spring Boot, TypeScript, Angular, Next.js, Python, Bash, SQL, PostgreSQL, MongoDB, Redis}
+\skillgroup{AI for QA}{LLMs, RAG, MCP, Claude Code, Cursor}
+\vspace{-0.4em}
+\end{cvbox}
+
+% --------------------------- Languages ----------------------------
+\begin{cvbox}[halign=flush left]{Languages}
+\langrow{English}{Professional}{French}{Professional}{Turkish}{Intermediate}
+\end{cvbox}
+
+\end{document}

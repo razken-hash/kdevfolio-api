@@ -1,0 +1,397 @@
+\documentclass[10pt,a4paper]{article}
+
+% ------------------------------------------------------------------
+% Packages
+% ------------------------------------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage[default]{sourcesanspro}
+\usepackage[a4paper,left=1.2cm,right=1.2cm,top=3.55cm,bottom=0.8cm]{geometry}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{babel,fadings}
+\usepackage[most]{tcolorbox}
+\usepackage{fontawesome5}
+\usepackage{paracol}
+\usepackage{enumitem}
+\usepackage{ragged2e}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\JustifyingParindent}{0pt}
+
+% ------------------------------------------------------------------
+% Colors
+% ------------------------------------------------------------------
+\definecolor{black}{HTML}{000000}
+\definecolor{navy}{HTML}{14325C}
+\definecolor{accent}{HTML}{1F5FAD}
+\definecolor{steel}{HTML}{2E6DB4}
+\definecolor{hairline}{HTML}{D6DEE8}
+\definecolor{textdark}{HTML}{222831}
+\definecolor{textmuted}{HTML}{66707D}
+\color{textdark}
+
+% ------------------------------------------------------------------
+% Layout: 30% sidebar / 70% main
+% ------------------------------------------------------------------
+\columnratio{0.32}
+\setlength{\columnsep}{0.9em}
+\setlength{\columnseprule}{0pt}
+
+\newlength{\headerheight}
+\setlength{\headerheight}{3.7cm}
+
+\newcommand{\metric}[1]{{\bfseries\color{accent}#1}}
+
+% ------------------------------------------------------------------
+% Header: gradient band with glass shapes and a frosted contact panel
+% ------------------------------------------------------------------
+\newcommand{\contactitem}[2]{%
+\mbox{\textcolor{white!70!accent}{#1}\hspace{0.45em}#2}}
+
+\newcommand{\makeheader}{%
+\begin{tikzpicture}[remember picture,overlay]
+\coordinate (NW) at (current page.north west);
+\coordinate (NE) at (current page.north east);
+\coordinate (HB) at ([yshift=-\headerheight]current page.north east);
+
+    % Band
+    \shade[left color=navy, right color=navy] (NW) rectangle (HB);
+
+    % Glass shapes, clipped to the band
+    \begin{scope}
+      \clip (NW) rectangle (HB);
+      \fill[white, opacity=0.07] ([xshift=-2.3cm,yshift=0.2cm]NE) circle (2.5cm);
+      \draw[white, opacity=0.22, line width=0.6pt] ([xshift=-2.3cm,yshift=0.2cm]NE) circle (2.5cm);
+      \fill[white, opacity=0.05] ([xshift=-5.2cm,yshift=-2.9cm]NE) circle (1.3cm);
+      \draw[white, opacity=0.16, line width=0.6pt] ([xshift=-5.2cm,yshift=-2.9cm]NE) circle (1.3cm);
+      % soft light reflection across the top
+      \fill[navy, opacity=0.2] (NW) rectangle ([yshift=-1.6cm]NE);
+    \end{scope}
+
+    % Name and title
+    \node[anchor=north west, text=white, inner sep=0pt]
+      at ([xshift=1.2cm,yshift=-0.62cm]NW)
+      {\fontsize{26}{28}\selectfont\bfseries ABDERRAZAK KENNICHE};
+    \node[anchor=north west, text=white, inner sep=0pt]
+      at ([xshift=1.2cm,yshift=-1.58cm]NW)
+      {\fontsize{13.5}{15}\selectfont\fontseries{sb}\selectfont
+        \textls[30]{Full Stack Developer | Spring Boot | Angular}
+        \hspace{10.5em}
+        \textls[30]{}
+      };
+
+% Frosted glass contact panel
+\node[
+anchor=north west,
+text width=\dimexpr\paperwidth-2.4cm-18pt-1pt\relax,
+rounded corners=5pt,
+fill=white, fill opacity=0.10,
+text opacity=1,
+draw=white, draw opacity=0.30,
+line width=0.5pt,
+inner xsep=9pt,
+inner ysep=4.5pt,
+text=white
+] at ([xshift=1.2cm,yshift=-2.25cm]NW)
+{%
+\small
+\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}lll@{}}
+\contactitem{\faMapMarker*}{Île-de-France, France} &
+\contactitem{\faPhone}{\href{tel:+33753188225}{+33 7 53 18 82 25}} &
+\contactitem{\faEnvelope}{\href{mailto:pro.contactabderrazak@gmail.com}{pro.contactabderrazak@gmail.com}} \\[6pt]
+
+        \contactitem{\faGithub}{\href{https://github.com/razken-hash}{github.com/razken-hash}} &
+        \contactitem{\faLinkedin}{\href{https://www.linkedin.com/in/razken-hash}{linkedin.com/in/razken-hash}} &
+        \contactitem{\faGlobe}{\href{https://razken-hash.site/?origin=reynold-4}{razken-hash.site}}
+    \end{tabular*}%
+};
+\end{tikzpicture}%
+}
+
+% ------------------------------------------------------------------
+% Background: faint gradient waves and lines (page stays white)
+% ------------------------------------------------------------------
+% \bgwave{vertical offset}{opacity}
+\newcommand{\bgwave}[2]{%
+\draw[steel, line width=0.7pt, opacity=#2, path fading=west]
+([yshift=0.5cm+#1]SW) .. controls +(6cm,1.6cm) and +(-5cm,-1.4cm) .. ([xshift=-7cm,yshift=0.9cm+#1]SE)
+.. controls +(3cm,0.8cm) and +(-2cm,-0.3cm) .. ([yshift=1.9cm+#1]SE);}
+
+% \bgdiagonal{horizontal offset}: fading lines in the empty lower-left corner
+\newcommand{\bgdiagonal}[1]{%
+\draw[steel, line width=0.6pt, opacity=0.35, path fading=north]
+([xshift=1.2cm+#1,yshift=0.7cm]current page.south west) --
+([xshift=3.0cm+#1,yshift=2.9cm]current page.south west);}
+
+\newcommand{\drawbackgroundlines}{%
+\begin{tikzpicture}[remember picture,overlay]
+\coordinate (SW) at (current page.south west);
+\coordinate (SE) at (current page.south east);
+% Flowing waves along the bottom, fading in from the left
+\bgwave{0cm}{0.30}
+\bgwave{0.35cm}{0.22}
+\bgwave{0.7cm}{0.15}
+% Soft gradient shape in the bottom-right corner
+\shade[inner color=steel!22, outer color=white]
+([xshift=-0.2cm,yshift=0.3cm]SE) circle (2.2cm);
+% Fading diagonal lines, lower left
+\bgdiagonal{0cm}
+\bgdiagonal{0.3cm}
+\end{tikzpicture}%
+}
+
+% ------------------------------------------------------------------
+% Glass panel (used for the profile)
+% ------------------------------------------------------------------
+\newtcolorbox{glasspanel}{enhanced, width=\linewidth,
+colback=white, opacityback=0.62, colframe=white, opacityframe=0.9,
+boxrule=0.8pt, arc=7pt, left=10pt, right=10pt, top=6pt, bottom=6pt,
+before skip=0pt, after skip=0pt,
+underlay={
+\begin{scope}
+\clip[rounded corners=7pt] (frame.south west) rectangle (frame.north east);
+\shade[left color=accent!14, right color=steel!6] (frame.south west) rectangle (frame.north east);
+\shade[inner color=steel!35, outer color=steel!6]
+([xshift=2.2cm,yshift=0.2cm]frame.south west) circle (1.5cm);
+\shade[inner color=accent!30, outer color=accent!5]
+([xshift=-3cm,yshift=-0.1cm]frame.north east) circle (1.9cm);
+\end{scope}
+\draw[rounded corners=7pt, steel!30, line width=0.5pt]
+([xshift=-0.6pt,yshift=-0.6pt]frame.south west) rectangle ([xshift=0.6pt,yshift=0.6pt]frame.north east);
+},
+overlay={
+\fill[white, opacity=0.45, rounded corners=6pt, path fading=south]
+([xshift=1pt,yshift=-1pt]frame.north west) rectangle ([xshift=-1pt,yshift=-0.9cm]frame.north east);
+}}
+
+% ------------------------------------------------------------------
+% Section and entry styles
+% ------------------------------------------------------------------
+\newcommand{\boxtitle}[1]{%
+{\color{navy}\bfseries\textls[120]{\MakeUppercase{#1}}}\par
+\vspace{0.25em}
+\nointerlineskip
+{\color{accent}\rule{1.6em}{1.6pt}}%
+{\color{hairline}\rule[0.35pt]{\dimexpr\linewidth-1.6em\relax}{0.6pt}}\par
+\vspace{0.5em}}
+
+% \begin{cvbox}[tcolorbox options]{title}: one box per section
+\newtcolorbox{cvbox}[2][]{enhanced, colback=white, colframe=steel!22,
+boxrule=0.6pt, arc=6pt, left=7pt, right=7pt, top=5pt, bottom=4pt,
+before skip=0pt, after skip=7pt,
+fuzzy shadow={0mm}{-0.5mm}{0mm}{0.35mm}{steel!14},
+before upper={\boxtitle{#2}}, #1}
+
+% ------------------------------------------------------------------
+% Experience timeline
+% ------------------------------------------------------------------
+\newcounter{tlentry}
+\newlength{\tlindent}
+\setlength{\tlindent}{1.4em}
+
+% \cventry{dates}{role}{company}{location}{content}
+% The company leads the entry; a timeline dot is anchored on its line.
+\newcommand{\cventry}[5]{%
+\stepcounter{tlentry}%
+\begin{tcolorbox}[blanker, left=\tlindent, before skip=0pt, after skip=0pt]
+\tikz[remember picture,overlay]\coordinate (tl-\thetlentry) at (-\tlindent+0.45em,0.4em);%
+{\fontsize{11.5}{13.5}\selectfont\bfseries\color{accent}#3}\hfill{\small\bfseries\color{accent}#1}\par
+\vspace{0.05em}
+{\bfseries #2}\hfill{\small\color{textmuted}#4}\par
+\vspace{0.1em}
+#5
+\end{tcolorbox}}
+
+\newcommand{\entrygap}{\par\vspace{1.4em}}
+
+% Line through all entry dots, then the dots on top (the first one filled: current job)
+\newcommand{\drawtimeline}{%
+\begin{tikzpicture}[remember picture,overlay]
+\draw[steel!35, line width=1.1pt] (tl-1) -- (tl-\thetlentry);
+\foreach \n in {1,...,\thetlentry} {
+\fill[white] (tl-\n) circle (4.2pt);
+\draw[accent, line width=1.4pt, fill=white] (tl-\n) circle (3pt);
+}
+\fill[accent] (tl-1) circle (3pt);
+\end{tikzpicture}}
+
+% \newcommand{\cvedu}[3]{%
+%   \textbf{\color{accent}#1} \hfill
+%   \textbf{#2}, {\small #3}\par
+%   \vspace{0.45em}
+% }
+
+\newcommand{\cvedu}[3]{%
+\noindent
+\begin{itemize}
+\item \makebox[8cm][l]{\small\bfseries\textbf{\color{navy}#1}}%
+\textbf{\color{accent}#2} ( {\small\color{textmuted}#3} )
+\end{itemize}%
+}
+
+% \newcommand{\cvedu}[4]{%
+%   \noindent
+%   \begin{tabular*}{\linewidth}
+%     {@{\extracolsep{\fill}}lr@{}}
+%     \begin{minipage}[t]{0.56\linewidth}
+%       \textbf{\color{navy}#2}
+%     \end{minipage}
+%     &
+%     \begin{minipage}[t]{0.40\linewidth}
+%       \raggedleft
+%       \textbf{\color{accent}#3}\\
+%       {\small\color{textmuted}#4}
+%     \end{minipage}
+%   \end{tabular*}
+%   \vspace{0.45em}
+% }
+
+\newcommand{\skillgroup}[2]{%
+\begin{itemize}
+\item \makebox[2.5cm][l]{\small\bfseries\color{navy}#1}%
+{\small #2}
+\end{itemize}%
+}
+
+% % \langitem{language}{level}
+% \newcommand{\langitem}[2]{%
+%   {\small\bfseries\color{navy}#1}\hfill{\small\color{textmuted}#2}\par\vspace{0.2em}}
+
+% One language item: name (3cm) + gap (1cm) + level (3cm)
+\newcommand{\langitem}[2]{%
+{\color{accent}\bfseries\textbullet}\hspace{0.3em}%
+{\small\bfseries\color{navy}#1}%
+\hspace{0.2cm}%
+{\small\color{textmuted}(#2)}%
+}
+
+% Three languages on one line
+\newcommand{\langrow}[6]{%
+\noindent
+\langitem{#1}{#2}\hfill
+\langitem{#3}{#4}\hfill
+\langitem{#5}{#6}\hspace{3cm}
+}
+
+\newcommand{\stack}[1]{%
+\vspace{0.1em}{\small{\color{navy}\bfseries Stack :} {\color{textmuted}#1}}}
+
+\setlist[itemize]{leftmargin=1.1em, itemsep=0.2em, topsep=0.15em, parsep=0pt,
+label={\raisebox{0.2ex}{\tikz\fill[accent] (0,0) circle (1.7pt);}}}
+
+\begin{document}
+\makeheader
+\drawbackgroundlines
+
+% ================= Profile (full width, glass panel) =================
+\vspace*{-0.2em}
+\begin{glasspanel}
+\justifying
+{\color{navy}\bfseries\textls[120]{PROFIL}}\par\vspace{0.3em}
+Full-Stack Software Engineer, holding dual degrees from ESI \& the University of Montpellier, with over 3 years of experience designing \& delivering end-to-end web applications, with  expertise in Spring Boot, Angular, DevOps, AWS \& genAI.
+\end{glasspanel}
+\par\vspace{0.6em}
+
+% ================= Main (70%) =================
+% \switchcolumn
+% \justifying\hyphenpenalty=50
+
+\begin{cvbox}[halign=justify]{Work History}
+
+\cventry{02/2026 -- 08/2026}{Next.js Frontend Developer}{\href{https://fr.shopping.rakuten.com/}{Rakuten France}}{Paris, France}{
+\begin{itemize}
+\item Implemented dark mode across \metric{5} \textbf{Next.js microfrontend} apps using a shared MUI design system.
+\item Developed \metric{+150} Playwright integration tests using mock servers and services to validate frontend behavior.
+\item Automated visual regression tests across \metric{+1100} Storybook stories with multiple locales using Reg-Suit \& GitHub Actions.
+\item Migrated \metric{+10000} CI artifacts and test reports to Google Cloud Storage (GCS).
+\item Designed and deployed a secure TypeScript/Hono \textbf{GCS proxy} to provide controlled access to CI reports.
+\item Integrated \textbf{AI-assisted} development workflows using MCP with Storybook, Playwright, and GitHub.
+\end{itemize}
+\stack{React, Next.js, MUI, TypeScript, Google Cloud Storage, GitHub Actions, Playwright, Reg-Suit, Storybook, Claude Code}
+}
+
+\entrygap
+
+\cventry{01/2025 -- 07/2025}{R\&D Software Engineer}{LIRMM -- Laboratory of Computer Science and Robotics}{Montpellier, France}{
+\begin{itemize}
+\item Designed a static code analyzer for \textbf{Angular applications} using Node.js and TypeScript.
+\item Developed an Angular interface to visualize navigation graphs and identify customizable test scenarios from routes.
+\item Automated end-to-end test generation using Selenium and Puppeteer based on user-selected scenarios.
+\item Implemented an \textbf{LLM-powered observability} layer to assess test execution and analyze generated results.
+\end{itemize}
+\stack{Angular, React, Node.js, TypeScript, Selenium, Puppeteer, LLMs, RAG, Embeddings, Vector Search}
+}
+
+\entrygap
+
+\cventry{09/2024 -- 07/2025}{R\&D Software Engineer}{LCSI -- Laboratory of Computer and Information Systems}{}{%
+\begin{itemize}
+\item Developed a full-stack platform to detect 6 types of \textbf{Java code smells} using Angular, Spring Boot, and Python.
+\item Fine-tuned a \textbf{pretrained CodeBERT model} to automate code smell classification from Java source code.
+\item Built a \textbf{dataset} of \metric{+5000} Java method and class instances to support model fine-tuning and evaluation.
+\item Implemented \textbf{REST APIs} to analyze complete Java projects and generate detailed PDF reports.
+\end{itemize}
+\stack{Angular, Java, Spring Boot, Python, Transformers, Machine Learning, CodeBERT, Embeddings}
+}
+
+\end{cvbox}
+
+% \begin{cvbox}[halign=flush left]{Education}
+% \cvedu{Master in Software Engineering}{\href{http://www.universite-paris-saclay.fr}{University of Montpellier}}{Montpellier, France}
+% \cvedu{State Engineer in Software Engineering}{\href{https://www.esi.dz}{High School of Computer Science (ESI)}}{Algiers, Algeria}
+% \vspace{-0.5em}
+% \end{cvbox}
+
+\begin{cvbox}{Education}
+
+\cvedu
+{Master in Software Engineering}
+{\href{https://www.umontpellier.fr/}{University of Montpellier}}
+{Montpellier, France}
+
+\cvedu
+{Double Master Diploma in Management}
+{\href{https://iae.umontpellier.fr/}{IAE, School of Management}}
+{Montpellier, France}
+
+\cvedu
+{State Engineer in Software Engineering}
+{\href{https://www.esi.dz/}{High School of Computer Science (ESI)}}
+{Algiers, Algeria}
+
+\end{cvbox}
+
+\begin{cvbox}[halign=flush left]{Skills}
+\skillgroup{Backend}{Java, Spring Boot, JPA, Spring
+Security, REST, gRPC, GraphQL, WebSocket, Microservices}
+\skillgroup{Frontend}{HTML5, CSS3, TypeScript, Angular, NgRx, TailwindCSS, Material UI, Microfront Architecture}
+\skillgroup{Databases}{MySQL, MongoDB, Redis, Firebase, Casandra}
+\skillgroup{Cloud / DevOps}{AWS (IAM, EC2, VPC), Docker, Kubernetes, GitHub Actions, Prometheus, Grafana, Kibana}
+\skillgroup{Tools / Testing}{Git, GitHub, Linux, Bash, Selenium, Playwright, Postman, Notion}
+\skillgroup{AI / LLM}{Genrative AI, Claude Code, Cursor, LLMs, RAG}
+\vspace{-0.4em}
+\end{cvbox}
+
+% \begin{cvbox}[halign=flush left]{Languages}
+%   \langitem{English}{Professional}
+%   \langitem{French}{Professional}
+%   \langitem{Turkish}{Intermediate}
+% \vspace{-0.2em}
+% \end{cvbox}
+
+\begin{cvbox}[halign=flush left]{Languages}
+\langrow
+{English}{Professional}
+{French}{Professional}
+{Turkish}{Intermediate}
+\end{cvbox}
+
+
+% \end{paracol}
+
+\end{document}
