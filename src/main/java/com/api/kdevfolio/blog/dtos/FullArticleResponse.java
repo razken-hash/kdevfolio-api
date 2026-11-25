@@ -1,24 +1,20 @@
-
 package com.api.kdevfolio.blog.dtos;
 
-import com.api.kdevfolio.blog.models.ArticleLanguage;
 import lombok.Builder;
 
 import java.time.Instant;
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 
+/** An article with all of its translations (returned by create/update). */
 @Builder
-public record ArticleSummaryResponseDto(
+public record FullArticleResponse(
         UUID id,
         String slug,
-        String imageUrl,
         Integer readingTimeMinutes,
         String authorName,
-        Set<String> categories,
-        ArticleLanguage language,
-        String title,
-        String description,
+        List<CategoryResponse> categories,
+        List<ArticleContentResponse> translations,
         Instant createdAt,
         Instant updatedAt
 ) {}

@@ -1,0 +1,25 @@
+package com.api.kdevfolio.blog.dtos;
+
+import com.api.kdevfolio.blog.models.ArticleLanguage;
+import lombok.Builder;
+
+import java.time.Instant;
+import java.util.Set;
+import java.util.UUID;
+
+/** An article rendered in a single language, including its full content. */
+@Builder
+public record ArticleResponse(
+        UUID id,
+        String slug,
+        String imageUrl,
+        Integer readingTimeMinutes,
+        String authorName,
+        Set<String> categories,
+        ArticleLanguage language,
+        String title,
+        String description,
+        String content,
+        Instant createdAt,
+        Instant updatedAt
+) {}

@@ -1,15 +1,14 @@
-
 package com.api.kdevfolio.jobapplications.controllers;
 
-import com.api.kdevfolio.jobapplications.dtos.*;
+import com.api.kdevfolio.jobapplications.dtos.CreateJobApplicationRequest;
+import com.api.kdevfolio.jobapplications.dtos.JobApplicationResponse;
+import com.api.kdevfolio.jobapplications.dtos.UpdateApplicationStatusRequest;
+import com.api.kdevfolio.jobapplications.dtos.UpdateJobApplicationRequest;
 import com.api.kdevfolio.jobapplications.enums.ApplicationStatus;
 import com.api.kdevfolio.jobapplications.services.JobApplicationService;
-
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,61 +16,47 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/job-applications")
 @RequiredArgsConstructor
-@CrossOrigin(origins = {
-        "http://localhost:4200",
-        "https://razken-hash.site",
-        "https://kenniche.abderrazak.dev"
-})
 public class JobApplicationController {
 
-    private final JobApplicationService service;
-
-    @PostMapping
-    public ResponseEntity<JobApplicationResponse> create(
-            @Valid @RequestBody CreateJobApplicationRequest request
-    ) {
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(service.create(request));
-    }
+    private final JobApplicationService jobApplicationService;
 
     @GetMapping
-    public ResponseEntity<List<JobApplicationResponse>> findAll(
+    public List<JobApplicationResponse> findAll(
             @RequestParam(required = false) ApplicationStatus status
     ) {
-        return ResponseEntity.ok(service.findAll(status));
+        return jobApplicationService.findAll(status);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<JobApplicationResponse> findById(
-            @PathVariable String id
-    ) {
-        return ResponseEntity.ok(service.findById(id));
+    public JobApplicationResponse findById(@PathVariable String id) {
+        return jobApplicationService.findById(id);
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public JobApplicationResponse create(@Valid @RequestBody CreateJobApplicationRequest request) {
+        return jobApplicationService.create(request);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<JobApplicationResponse> update(
+    public JobApplicationResponse update(
             @PathVariable String id,
             @Valid @RequestBody UpdateJobApplicationRequest request
     ) {
-        return ResponseEntity.ok(service.update(id, request));
+        return jobApplicationService.update(id, request);
     }
 
     @PatchMapping("/{id}/status")
-    public ResponseEntity<JobApplicationResponse> updateStatus(
+    public JobApplicationResponse updateStatus(
             @PathVariable String id,
             @Valid @RequestBody UpdateApplicationStatusRequest request
     ) {
-        return ResponseEntity.ok(
-                service.updateStatus(id, request.status())
-        );
+        return jobApplicationService.updateStatus(id, request.status());
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(
-            @PathVariable String id
-    ) {
-        service.delete(id);
-        return ResponseEntity.noContent().build();
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable String id) {
+        jobApplicationService.delete(id);
     }
 }

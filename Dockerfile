@@ -1,18 +1,22 @@
-
-# Build stage
+# ---- Build stage ----
 FROM maven:3.9-eclipse-temurin-21-alpine AS build
 
 WORKDIR /app
 
+# Resolve dependencies first so they are cached until pom.xml changes.
 COPY pom.xml .
+RUN mvn -B dependency:go-offline
+
 COPY src ./src
+RUN mvn -B package -DskipTests
 
-RUN mvn -B clean package -DskipTests
-
-# Runtime stage
+# ---- Runtime stage ----
 FROM eclipse-temurin:21-jre-alpine
 
 WORKDIR /app
+
+RUN addgroup -S app && adduser -S app -G app
+USER app
 
 COPY --from=build /app/target/*.jar app.jar
 

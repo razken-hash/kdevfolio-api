@@ -1,11 +1,12 @@
-
 package com.api.kdevfolio.jobapplications.models;
 
 import com.api.kdevfolio.jobapplications.enums.ApplicationStatus;
 import com.api.kdevfolio.jobapplications.enums.CvProfile;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.Instant;
 
@@ -14,8 +15,6 @@ import java.time.Instant;
 @Getter
 @Setter
 @NoArgsConstructor
-@Builder
-@AllArgsConstructor
 public class JobApplication {
 
     @Id
@@ -44,7 +43,6 @@ public class JobApplication {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    @Builder.Default
     private ApplicationStatus status = ApplicationStatus.PENDING;
 
     @Column(nullable = false, updatable = false)

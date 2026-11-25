@@ -1,111 +1,50 @@
-
 package com.api.kdevfolio.analytics.services;
 
-import org.springframework.beans.factory.annotation.Value;
-
-import com.api.kdevfolio.analytics.dtos.RecordVisitDto;
-import com.api.kdevfolio.analytics.dtos.VisitResponseDto;
-import com.api.kdevfolio.analytics.models.Visit;
-import com.api.kdevfolio.analytics.repositories.VisitsRepository;
-import jakarta.servlet.http.HttpServletRequest;
+import com.api.kdevfolio.analytics.config.AnalyticsProperties;
+import com.api.kdevfolio.analytics.dtos.RecordVisitRequest;
+import com.api.kdevfolio.analytics.dtos.VisitResponse;
+import com.api.kdevfolio.analytics.mappers.VisitMapper;
+import com.api.kdevfolio.analytics.repositories.VisitRepository;
+import com.api.kdevfolio.common.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
+import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class AnalyticsService {
 
-    private final VisitsRepository visitsRepository;
+    private final VisitRepository visitRepository;
+    private final AnalyticsProperties properties;
 
-    @Value("${analytics.excluded-visitors:}")
-    private String excludedVisitorsConfig;
-
-    private Set<UUID> getExcludedVisitors() {
-        if (excludedVisitorsConfig == null
-                || excludedVisitorsConfig.isBlank()) {
-            return Set.of();
-        }
-
-        return Arrays.stream(excludedVisitorsConfig.split(","))
-                .map(String::trim)
-                .filter(value -> !value.isEmpty())
-                .map(UUID::fromString)
-                .collect(Collectors.toSet());
-    }
-
+    /**
+     * @return the recorded visit, or empty if the visitor is excluded
+     */
     @Transactional
-    public VisitResponseDto recordVisit(
-            RecordVisitDto dto,
-            HttpServletRequest request
-    ) {
-        if (dto.visitorId() != null && getExcludedVisitors().contains(dto.visitorId())) {
-            return null;
+    public Optional<VisitResponse> recordVisit(RecordVisitRequest request, String ipAddress) {
+        if (properties.isExcluded(request.visitorId())) {
+            return Optional.empty();
         }
 
-        Visit visit = new Visit();
-
-        visit.setVisitorId(dto.visitorId());
-        visit.setPath(dto.path());
-        visit.setOrigin(dto.origin());
-        visit.setPageTitle(dto.pageTitle());
-        visit.setDeviceType(dto.deviceType());
-        visit.setOperatingSystem(dto.operatingSystem());
-        visit.setPlatform(dto.platform());
-        visit.setBrowser(dto.browser());
-        visit.setBrowserLanguage(dto.browserLanguage());
-        visit.setTimeZone(dto.timeZone());
-
-        // Obtain the address from the server-side request.
-        // Configure trusted proxy handling before relying on this
-        // value in a reverse-proxy deployment.
-        visit.setIpAddress(request.getRemoteAddr());
-
-        Visit savedVisit = visitsRepository.save(visit);
-
-        return toResponseDto(savedVisit);
+        var saved = visitRepository.save(VisitMapper.toEntity(request, ipAddress));
+        return Optional.of(VisitMapper.toResponse(saved));
     }
 
-    @Transactional(readOnly = true)
-    public List<VisitResponseDto> getRecentVisits() {
-        return visitsRepository.findTop100ByOrderByVisitedAtDesc()
+    public List<VisitResponse> getRecentVisits() {
+        return visitRepository.findTop100ByOrderByVisitedAtDesc()
                 .stream()
-                .map(this::toResponseDto)
+                .map(VisitMapper::toResponse)
                 .toList();
     }
 
-    @Transactional(readOnly = true)
-    public VisitResponseDto getVisitById(UUID id) {
-        Visit visit = visitsRepository.findById(id)
-                .orElseThrow(() ->
-                        new IllegalArgumentException(
-                                "Visit not found: " + id
-                        )
-                );
-
-        return toResponseDto(visit);
-    }
-
-    private VisitResponseDto toResponseDto(Visit visit) {
-        return new VisitResponseDto(
-                visit.getId(),
-                visit.getVisitedAt(),
-                visit.getVisitorId(),
-                visit.getOrigin(),
-                visit.getPath(),
-                visit.getPageTitle(),
-                visit.getBrowserLanguage(),
-                visit.getDeviceType(),
-                visit.getBrowser(),
-                visit.getOperatingSystem(),
-                visit.getTimeZone(),
-                visit.getPlatform()
-        );
+    public VisitResponse getVisitById(UUID id) {
+        return visitRepository.findById(id)
+                .map(VisitMapper::toResponse)
+                .orElseThrow(() -> new ResourceNotFoundException("Visit", "id", id));
     }
 }

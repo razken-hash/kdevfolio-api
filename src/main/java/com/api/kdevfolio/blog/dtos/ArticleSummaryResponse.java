@@ -7,8 +7,9 @@ import java.time.Instant;
 import java.util.Set;
 import java.util.UUID;
 
+/** An article rendered in a single language, without its content (for listings). */
 @Builder
-public record ArticleResponseDto(
+public record ArticleSummaryResponse(
         UUID id,
         String slug,
         String imageUrl,
@@ -18,7 +19,6 @@ public record ArticleResponseDto(
         ArticleLanguage language,
         String title,
         String description,
-        String content,
         Instant createdAt,
         Instant updatedAt
 ) {}

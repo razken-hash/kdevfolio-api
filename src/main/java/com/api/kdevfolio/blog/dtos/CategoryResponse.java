@@ -6,18 +6,11 @@ import java.time.Instant;
 import java.util.UUID;
 
 @Builder
-public record CategoryResponseDto(
-
+public record CategoryResponse(
         UUID id,
-
         String slug,
-
         String name,
-
         String description,
-
         Instant createdAt,
-
         Instant updatedAt
-
 ) {}

@@ -6,7 +6,7 @@ import lombok.Builder;
 import java.util.UUID;
 
 @Builder
-public record ArticleContentResponseDto(
+public record ArticleContentResponse(
         UUID id,
         ArticleLanguage language,
         String title,
