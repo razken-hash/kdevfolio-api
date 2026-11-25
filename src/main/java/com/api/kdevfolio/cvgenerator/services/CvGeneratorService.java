@@ -6,10 +6,13 @@ import com.api.kdevfolio.jobapplications.enums.CvProfile;
 import com.google.genai.Client;
 import com.google.genai.types.GenerateContentResponse;
 
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -17,21 +20,29 @@ import java.nio.charset.StandardCharsets;
 @Service
 public class CvGeneratorService {
 
-    private final Client geminiClient;
+    private final ObjectProvider<Client> geminiClientProvider;
     private final ResourceLoader resourceLoader;
 
     @Value("${gemini.model:gemini-flash-latest}")
     private String model;
 
     public CvGeneratorService(
-            Client geminiClient,
+            ObjectProvider<Client> geminiClientProvider,
             ResourceLoader resourceLoader
     ) {
-        this.geminiClient = geminiClient;
+        this.geminiClientProvider = geminiClientProvider;
         this.resourceLoader = resourceLoader;
     }
 
     public GenerateCvResponse generate(GenerateCvRequest request) {
+
+        Client geminiClient = geminiClientProvider.getIfAvailable();
+        if (geminiClient == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.SERVICE_UNAVAILABLE,
+                    "CV generation is not configured: GOOGLE_API_KEY is missing."
+            );
+        }
 
         if (request.profileType() == null) {
             throw new IllegalArgumentException("CV profile is required.");
